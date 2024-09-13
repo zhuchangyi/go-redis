@@ -1,16 +1,16 @@
 package reply
 
-type UnknowErrReply struct {
+type UnknownErrReply struct {
 }
 
 var unknowErrBytes = []byte("-Err unknow\r\n")
 
-func (u UnknowErrReply) Error() string {
+func (u UnknownErrReply) Error() string {
 	//TODO implement me
 	return "Err unknown"
 }
 
-func (u UnknowErrReply) ToBytes() []byte {
+func (u UnknownErrReply) ToBytes() []byte {
 	//TODO implement me
 	return unknowErrBytes
 }
