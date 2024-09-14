@@ -6,12 +6,10 @@ type UnknownErrReply struct {
 var unknowErrBytes = []byte("-Err unknow\r\n")
 
 func (u UnknownErrReply) Error() string {
-	//TODO implement me
 	return "Err unknown"
 }
 
 func (u UnknownErrReply) ToBytes() []byte {
-	//TODO implement me
 	return unknowErrBytes
 }
 
@@ -20,12 +18,10 @@ type ArgNumErrReply struct {
 }
 
 func (r *ArgNumErrReply) Error() string {
-	//TODO implement me
 	return "ERR wrong number of arguments for '" + r.Cmd + "' command"
 }
 
 func (r *ArgNumErrReply) ToBytes() []byte {
-	//TODO implement me
 	return []byte("-ERR wrong number of arguments for '" + r.Cmd + "' command\r\n")
 }
 
