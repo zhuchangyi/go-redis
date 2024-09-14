@@ -8,7 +8,7 @@ import (
 type EchoDatebase struct {
 }
 
-func NewEchoDatebase() *EchoDatebase {
+func NewEchoDatabase() *EchoDatebase {
 	return &EchoDatebase{}
 }
 func (e EchoDatebase) Exec(clienr resp.Connection, args [][]byte) resp.Reply {

@@ -2,7 +2,6 @@ package parser
 
 import (
 	"bufio"
-	"bytes"
 	"errors"
 	"go-redis/interface/resp"
 	"go-redis/lib/logger"
@@ -24,39 +23,6 @@ func ParseStream(reader io.Reader) <-chan *Payload {
 	ch := make(chan *Payload)
 	go parse0(reader, ch)
 	return ch
-}
-
-// ParseBytes reads data from []byte and return all replies
-func ParseBytes(data []byte) ([]resp.Reply, error) {
-	ch := make(chan *Payload)
-	reader := bytes.NewReader(data)
-	go parse0(reader, ch)
-	var results []resp.Reply
-	for payload := range ch {
-		if payload == nil {
-			return nil, errors.New("no reply")
-		}
-		if payload.Err != nil {
-			if payload.Err == io.EOF {
-				break
-			}
-			return nil, payload.Err
-		}
-		results = append(results, payload.Data)
-	}
-	return results, nil
-}
-
-// ParseOne reads data from []byte and return the first payload
-func ParseOne(data []byte) (resp.Reply, error) {
-	ch := make(chan *Payload)
-	reader := bytes.NewReader(data)
-	go parse0(reader, ch)
-	payload := <-ch // parse0 will close the channel
-	if payload == nil {
-		return nil, errors.New("no reply")
-	}
-	return payload.Data, payload.Err
 }
 
 type readState struct {
@@ -108,6 +74,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 				// multi bulk reply
 				err = parseMultiBulkHeader(msg, &state)
 				if err != nil {
+					//logger.Info("parseMultiBulkHeader wrong")
 					ch <- &Payload{
 						Err: errors.New("protocol error: " + string(msg)),
 					}
@@ -257,14 +224,6 @@ func parseSingleLineReply(msg []byte) (resp.Reply, error) {
 			return nil, errors.New("protocol error: " + string(msg))
 		}
 		result = reply.MakeIntReply(val)
-	default:
-		// parse as text protocol
-		strs := strings.Split(str, " ")
-		args := make([][]byte, len(strs))
-		for i, s := range strs {
-			args[i] = []byte(s)
-		}
-		result = reply.MakeMultiBulkReply(args)
 	}
 	return result, nil
 }
