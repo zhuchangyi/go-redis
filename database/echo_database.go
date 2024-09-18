@@ -2,25 +2,27 @@ package database
 
 import (
 	"go-redis/interface/resp"
+	"go-redis/lib/logger"
 	"go-redis/resp/reply"
 )
 
-type EchoDatebase struct {
+type EchoDatabase struct {
 }
 
-func NewEchoDatabase() *EchoDatebase {
-	return &EchoDatebase{}
+func NewEchoDatabase() *EchoDatabase {
+	return &EchoDatabase{}
 }
-func (e EchoDatebase) Exec(clienr resp.Connection, args [][]byte) resp.Reply {
+
+func (e EchoDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply {
 	return reply.MakeMultiBulkReply(args)
+
 }
 
-func (e EchoDatebase) Close() {
-	//TODO implement me
-	panic("implement me")
+func (e EchoDatabase) AfterClientClose(c resp.Connection) {
+	logger.Info("EchoDatabase AfterClientClose")
 }
 
-func (e EchoDatebase) AfterClientClose(c resp.Connection) {
-	//TODO implement me
-	panic("implement me")
+func (e EchoDatabase) Close() {
+	logger.Info("EchoDatabase Close")
+
 }
